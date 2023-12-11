@@ -1,6 +1,7 @@
 const express = require('express');
 const { getAllTakers, getTalkerById } = require('./talkerManager');
 const generateToken = require('./utils/generateToken');
+const validateLogin = require('./middlewares/validadeLogin');
 
 const app = express();
 app.use(express.json());
@@ -25,7 +26,7 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(talker);
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', validateLogin, (req, res) => {
   const { email, password } = req.body;
   const token = generateToken();
   if ([email, password].includes(undefined)) {
