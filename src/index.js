@@ -1,5 +1,6 @@
 const express = require('express');
-const { getAllTakers, getTalkerById, addTalker, updateTalker, deleteTalker } = require('./talkerManager');
+const { 
+  getAllTakers, getTalkerById, addTalker, updateTalker, deleteTalker } = require('./talkerManager');
 const generateToken = require('./utils/generateToken');
 const validateLogin = require('./middlewares/validadeLogin');
 const auth = require('./middlewares/auth');
