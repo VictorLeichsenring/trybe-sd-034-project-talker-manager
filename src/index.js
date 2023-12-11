@@ -1,7 +1,11 @@
 const express = require('express');
-const { getAllTakers, getTalkerById } = require('./talkerManager');
+const { getAllTakers, getTalkerById, addTalker } = require('./talkerManager');
 const generateToken = require('./utils/generateToken');
 const validateLogin = require('./middlewares/validadeLogin');
+const auth = require('./middlewares/auth');
+const validateName = require('./middlewares/validateName');
+const validateAge = require('./middlewares/validateAge');
+const validateTalk = require('./middlewares/validateTalk');
 
 const app = express();
 app.use(express.json());
@@ -34,6 +38,18 @@ app.post('/login', validateLogin, (req, res) => {
   }
   return res.status(200).json({ token });
 });
+
+app.post('/talker',
+  auth,
+  validateName,
+  validateAge,
+  validateName,
+  validateTalk,
+  async (req, res) => {
+    const talkerData = req.body;
+    const talker = await addTalker(talkerData);
+    return res.status(201).json(talker);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
