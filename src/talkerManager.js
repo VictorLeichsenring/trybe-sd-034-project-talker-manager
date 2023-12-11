@@ -45,8 +45,28 @@ const addTalker = async (talkerData) => {
   return newTalker;
 };
 
+const updateTalker = async (id, newTalkerData) => {
+  const talkers = await readTalkerManagerFile();
+  if (!talkers) {
+    throw new Error('Não foi possível ler o arquivo de talkers.');
+  }
+
+  const talkerIndex = talkers.findIndex((talker) => talker.id === id);
+  if (talkerIndex === -1) {
+    return null; // Talker não encontrado
+  }
+
+  // Atualiza os dados do talker
+  talkers[talkerIndex] = { ...talkers[talkerIndex], ...newTalkerData };
+
+  const updatedTalkers = JSON.stringify(talkers, null, 2);
+  await whriteTalkerManegerFile(updatedTalkers);
+  return talkers[talkerIndex];
+};
+
 module.exports = {
   getAllTakers,
   getTalkerById,
   addTalker,
+  updateTalker,
 };
