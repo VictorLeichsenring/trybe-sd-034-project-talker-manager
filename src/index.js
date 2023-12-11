@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTakers } = require('./talkerManager');
+const { getAllTakers, getTalkerById } = require('./talkerManager');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +15,13 @@ app.get('/', (_request, response) => {
 app.get('/talker', async (req, res) => {
   const talkers = await getAllTakers();
   res.status(200).json(talkers);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talker = await getTalkerById(Number(id));
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  res.status(200).json(talker);
 });
 
 app.listen(PORT, () => {
