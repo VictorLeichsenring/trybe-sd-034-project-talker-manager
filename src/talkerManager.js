@@ -64,9 +64,28 @@ const updateTalker = async (id, newTalkerData) => {
   return talkers[talkerIndex];
 };
 
+const deleteTalker = async (id) => {
+  const talkers = await readTalkerManagerFile();
+  if (!talkers) {
+    throw new Error('Não foi possível ler o arquivo de talkers.');
+  }
+
+  const filteredTalkers = talkers.filter((talker) => talker.id !== id);
+
+  // Verifica se um talker foi realmente removido
+  if (filteredTalkers.length === talkers.length) {
+    return null; // Talker não encontrado
+  }
+
+  const updatedTalkers = JSON.stringify(filteredTalkers, null, 2);
+  await whriteTalkerManegerFile(updatedTalkers);
+  return id;
+};
+
 module.exports = {
   getAllTakers,
   getTalkerById,
   addTalker,
   updateTalker,
+  deleteTalker,
 };

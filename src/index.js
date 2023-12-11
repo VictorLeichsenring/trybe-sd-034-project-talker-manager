@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTakers, getTalkerById, addTalker, updateTalker } = require('./talkerManager');
+const { getAllTakers, getTalkerById, addTalker, updateTalker, deleteTalker } = require('./talkerManager');
 const generateToken = require('./utils/generateToken');
 const validateLogin = require('./middlewares/validadeLogin');
 const auth = require('./middlewares/auth');
@@ -70,6 +70,20 @@ app.put('/talker/:id',
       return res.status(500).json({ message: 'Erro ao atualizar o palestrante' });
     }
   });
+
+app.delete('/talker/:id', auth, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await deleteTalker(Number(id));
+    if (result === null) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+    return res.status(204).end(); // Sem conteúdo na resposta
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao deletar o palestrante' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log('Online');
