@@ -23,6 +23,25 @@ app.get('/talker', async (req, res) => {
   res.status(200).json(talkers);
 });
 
+app.get('/talker/search', auth, async (req, res) => {
+  const { q: searchTerm } = req.query;
+  try {
+    const talkers = await getAllTakers();
+
+    // Se searchTerm não for fornecido ou estiver vazio, retorna todos os talkers
+    if (!searchTerm) {
+      return res.status(200).json(talkers);
+    }
+    // Filtra talkers cujo nome contém o termo de pesquisa
+    const filteredTalkers = talkers.filter((talker) =>
+      talker.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    return res.status(200).json(filteredTalkers);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao buscar palestrantes' });
+  }
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await getTalkerById(Number(id));
